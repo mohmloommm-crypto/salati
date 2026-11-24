@@ -585,22 +585,24 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
       <div class="field">
         <label>صوت المؤذن</label>
         <select id="adhanSoundSelect">
-          <option value="makkah">أذان مكي</option>
-          <option value="egypt" disabled>أذان مصري (قريبًا)</option>
-          <option value="madinah" disabled>أذان الحرم المدني (قريبًا)</option>
+          <option value="fakhry">أذان صباح فخري</option>
+          <option value="beautiful">أذان — تسجيل ويكيميديا (CC0)</option>
+          <option value="andrewler">الأذان الحالي — أندرولر (CC BY-SA 4.0)</option>
         </select>
       </div>
+      <div class="hint" id="adhanVoiceNote"></div>
       <div class="row-btns">
-        <button class="btn small" id="adhanPreviewBtn" type="button">▶️ اسمع الأذان</button>
+        <button class="btn small" id="adhanPreviewBtn" type="button">▶️ اسمع الأذان (عينة ٣٠ ثانية)</button>
         <button class="btn small ghost" id="adhanStopBtn" type="button">⏹ إيقاف</button>
       </div>
+      <div class="hint" id="adhanPreviewStatus"></div>
       <div class="note" id="alarmStatus">جارٍ قراءة حالة التنبيهات…</div>
       <div class="row-btns">
         <button class="btn small" id="exactAlarmBtn" type="button">⏰ السماح بالمنبّهات الدقيقة</button>
         <button class="btn small" id="notifPermBtn" type="button">🔔 السماح بالإشعارات</button>
         <button class="btn small" id="batteryBtn" type="button">🔋 استثناء توفير البطارية</button>
       </div>
-      <div class="note">🔔 الأذان يشتغل بصوت كامل والموبايل مقفول عن طريق منبّهات دقيقة في تطبيق الأندرويد، وتُعاد جدولتها تلقائيًا كل يوم (منبّه صيانة يومي) وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية أو تحديث التطبيق. تنبيه صادق: بعض الشركات المصنّعة تقطع أصوات الإشعارات الطويلة بعد ثوانٍ؛ لذلك الأذان هنا يُشغَّل عبر خدمة أمامية بصوت منبّه كامل وليس صوت إشعار عادي. <b>الأذان لم يُختبَر بعد على جهاز حقيقي لمدة ٣ أيام متتالية</b> — جرّبه من زر «جرّب الأذان» بالأسفل، وأخبرنا بالنتيجة.<br>🎙️ تسجيل الأذان: «Azan.ogg» للمستخدم Andrewler على ويكيميديا كومنز، برخصة CC BY-SA 4.0.</div>
+      <div class="note">🔔 الأذان يشتغل بصوت كامل والموبايل مقفول عن طريق منبّهات دقيقة في تطبيق الأندرويد، وتُعاد جدولتها تلقائيًا كل يوم (منبّه صيانة يومي) وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية أو تحديث التطبيق. تنبيه صادق: بعض الشركات المصنّعة تقطع أصوات الإشعارات الطويلة بعد ثوانٍ؛ لذلك الأذان هنا يُشغَّل عبر خدمة أمامية بصوت منبّه كامل وليس صوت إشعار عادي. <b>الأذان لم يُختبَر بعد على جهاز حقيقي لمدة ٣ أيام متتالية</b> — جرّبه من زر «جرّب الأذان» بالأسفل، وأخبرنا بالنتيجة.<br>🎙️ الأصوات (كلها تسجيلات بشرية حقيقية، مضمّنة في التطبيق وتعمل من غير إنترنت، وكلها بنفس مستوى الصوت): <b>صباح فخري</b> — تسجيل قديم بحالة الملكية العامة (ويكيميديا كومنز)؛ <b>تسجيل ويكيميديا (CC0)</b> للمستخدم Adam-synagda — المؤذن غير مذكور في المصدر؛ <b>أندرولر</b> — «Azan.ogg» على ويكيميديا كومنز، برخصة CC BY-SA 4.0 — المؤذن غير مذكور في المصدر. ملحوظة صادقة: التسجيلات المتاحة برخص إعادة توزيع مؤكدة لا تحدّد مقامًا مصريًا أو مدنيًا أو مكيًا موثّقًا، فالأسماء هنا وصف للمصدر وليست مقامًا. أذان فجر خاص (فيه «الصلاة خير من النوم») غير متاح من مصدر مؤكد الحقوق حتى الآن.</div>
     </div>
 
     <div class="card">
@@ -636,7 +638,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
         المواقيت محسوبة على جهازك بالكامل وتعمل من غير إنترنت.<br>
         طريقة الحساب الافتراضية: <b>الهيئة المصرية العامة للمساحة</b> (فجر ١٩.٥°، عشاء ١٧.٥°).<br>
         التاريخ الهجري: تقويم <b>أم القرى</b>.<br>
-        الإصدار: <b>١.١</b> — كل المراحل: المواقيت والأذان والقرآن والأذكار والسبحة.
+        الإصدار: <b>١.٢</b> — كل المراحل: المواقيت والأذان والقرآن والأذكار والسبحة.
       </p>
     </div>
   </section>
@@ -740,7 +742,7 @@ function cityById(id){ for(var i=0;i<CITIES.length;i++) if(CITIES[i].id===id) re
 var LS_KEY = "salati_settings_v1";
 var DEFAULTS = {
   cityId:"cairo", lat:30.0444, lng:31.2357, cityName:"القاهرة",
-  method:"egypt", asr:"standard", theme:"dark", reminder:0, adhanSound:"makkah",
+  method:"egypt", asr:"standard", theme:"dark", reminder:0, adhanSound:"fakhry",
   notif:{fajr:true, dhuhr:true, asr:true, maghrib:true, isha:true}
 };
 var settings = loadSettings();
@@ -752,6 +754,11 @@ function loadSettings(){
       for(var k2 in s) if(k2 in out || k2==="notif") out[k2]=s[k2];
       if(!out.notif || typeof out.notif!=="object") out.notif = DEFAULTS.notif;
       for(var p in DEFAULTS.notif) if(!(p in out.notif)) out.notif[p]=DEFAULTS.notif[p];
+      /* migrate old voice keys (v1.0/v1.1): "makkah" was the Andrewler
+         recording; "egypt"/"madinah" never worked, so they fall back to default */
+      if(out.adhanSound==="makkah") out.adhanSound="andrewler";
+      else if(out.adhanSound==="egypt" || out.adhanSound==="madinah") out.adhanSound="fakhry";
+      else if(out.adhanSound!=="fakhry" && out.adhanSound!=="beautiful" && out.adhanSound!=="andrewler") out.adhanSound="fakhry";
       return out;
     }
   }catch(e){}
@@ -1269,6 +1276,17 @@ function trackBookmarkOnScroll(){
   }, 500);
 }
 
+/* ---------- ملحوظة مصدر صوت الأذان المختار ---------- */
+var ADHAN_VOICE_NOTES = {
+  fakhry: "🎙️ صباح فخري — تسجيل قديم بحالة الملكية العامة (ويكيميديا كومنز).",
+  beautiful: "🎙️ تسجيل ويكيميديا كومنز برخصة CC0 (المستخدم Adam-synagda) — المؤذن غير مذكور في المصدر.",
+  andrewler: "🎙️ تسجيل Andrewler على ويكيميديا كومنز، برخصة CC BY-SA 4.0 — المؤذن غير مذكور في المصدر."
+};
+function renderAdhanVoiceNote(){
+  var el=document.getElementById("adhanVoiceNote");
+  if(el) el.textContent = ADHAN_VOICE_NOTES[settings.adhanSound] || "";
+}
+
 /* ---------- التنقل ---------- */
 function showScreen(name){
   var screens = document.querySelectorAll(".screen");
@@ -1296,7 +1314,13 @@ function init(){
   /* أزرار الأذان والتنبيهات (تعمل فقط داخل تطبيق الأندرويد) */
   var pv=document.getElementById("adhanPreviewBtn");
   if(pv) pv.addEventListener("click", function(){
-    if(window.SalatiBridge && window.SalatiBridge.playAdhanPreview) window.SalatiBridge.playAdhanPreview(1);
+    var ps=document.getElementById("adhanPreviewStatus");
+    if(window.SalatiBridge && window.SalatiBridge.playAdhanPreview){
+      window.SalatiBridge.playAdhanPreview(settings.adhanSound);
+      if(ps) ps.textContent="🎧 تُشغَّل عينة ٣٠ ثانية من الصوت المختار…";
+    } else if(ps){
+      ps.textContent="المعاينة تعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.";
+    }
   });
   var st=document.getElementById("adhanStopBtn");
   if(st) st.addEventListener("click", function(){
@@ -1319,10 +1343,14 @@ function init(){
   });
   var as=document.getElementById("adhanSoundSelect");
   if(as){
-    as.value=settings.adhanSound||"makkah";
+    as.value=settings.adhanSound||"fakhry";
+    renderAdhanVoiceNote();
     as.addEventListener("change", function(){
       settings.adhanSound=this.value;
-      applySettingsAndRender();
+      saveSettings();
+      renderAdhanVoiceNote();
+      /* save the voice natively WITHOUT rescheduling the alarms */
+      if(window.SalatiBridge && window.SalatiBridge.saveAdhanVoice) window.SalatiBridge.saveAdhanVoice(this.value);
     });
   }
 
