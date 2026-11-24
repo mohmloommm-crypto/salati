@@ -41,9 +41,11 @@ select,input{font-family:inherit;}
 /* ---------- Header ---------- */
 .app-header{
   position:sticky; top:0; z-index:20;
-  background:linear-gradient(180deg, var(--bg) 82%, transparent);
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
   padding:16px 18px 10px;
 }
+html{scroll-padding-top:96px;}
 .header-inner{max-width:560px; margin:0 auto; display:flex; align-items:center; gap:12px;}
 .logo{width:46px; height:46px; flex:0 0 46px; border-radius:14px;
   background:linear-gradient(145deg,#14532d,#0b3d24);
@@ -218,7 +220,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
 .surah-row .s-name{font-size:18px; font-weight:800; font-family:"Amiri Quran","Amiri",serif;}
 .surah-row .s-meta{font-size:11.5px; color:var(--muted); font-weight:700; margin-top:1px;}
 .surah-row .s-page{margin-inline-start:auto; font-size:11.5px; color:var(--muted); font-weight:700; text-align:left;}
-.q-reading{font-family:"Amiri Quran","Amiri",serif; font-size:25px; line-height:2.15; text-align:justify; color:var(--text);}
+.q-reading{font-family:"Amiri Quran","Amiri",serif; font-size:25px; line-height:2.15; text-align:justify; color:var(--text); padding:0 6px;}
 .q-reading .ayah{display:inline;}
 .q-reading .ayah.playing{color:var(--gold-text); background:var(--gold-soft); border-radius:8px;}
 .q-reading .ayah-num{
@@ -242,6 +244,23 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
 .audio-status{font-size:12px; font-weight:700; color:var(--muted); text-align:center;}
 .audio-status.err{color:#d9534f;}
 .back-link{background:none; border:none; color:var(--gold-text); font-size:14px; font-weight:800; padding:4px 0 10px; display:inline-flex; align-items:center; gap:4px;}
+.bookmark-card{display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--gold); border-radius:var(--radius); padding:12px 14px; margin-bottom:14px; box-shadow:var(--card-shadow); cursor:pointer; width:100%; text-align:right; font-family:inherit; color:var(--text);}
+.bookmark-card .b-ico{font-size:22px;}
+.bookmark-card .b-txt{flex:1;}
+.bookmark-card .b-title{font-weight:800; font-size:14.5px; color:var(--gold-text);}
+.bookmark-card .b-sub{font-size:12.5px; color:var(--muted); font-weight:700; margin-top:2px;}
+.audio-retry{display:none; width:100%; margin-top:8px; background:var(--gold); color:#12351f; border:none; border-radius:10px; padding:10px; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer;}
+.walk-step{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border);}
+.walk-step:last-child{border-bottom:none;}
+.walk-step .w-ico{font-size:20px; width:26px; text-align:center;}
+.walk-step .w-txt{flex:1;}
+.walk-step .w-title{font-weight:800; font-size:14px;}
+.walk-step .w-sub{font-size:12px; color:var(--muted); font-weight:700; line-height:1.7;}
+.walk-step .w-btn{flex:0 0 auto;}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:50; display:none; align-items:flex-end; justify-content:center;}
+.overlay.open{display:flex;}
+.overlay-card{background:var(--surface); border:1px solid var(--border); border-radius:18px 18px 0 0; padding:18px; max-width:560px; width:100%; max-height:85vh; overflow-y:auto; box-shadow:0 -8px 30px rgba(0,0,0,.4);}
+.overlay-card h2{font-size:18px; font-weight:900; margin-bottom:4px;}
 
 /* ---------- Adhkar / Duas ---------- */
 .cat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
@@ -323,9 +342,15 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
 
     <div id="todayPrayers"></div>
 
+    <button class="bookmark-card" id="bookmarkCard" type="button" style="display:none;">
+      <span class="b-ico">📖</span>
+      <span class="b-txt"><span class="b-title">كمّل من حيث وقفت</span><span class="b-sub" id="bookmarkCardSub" style="display:block;"></span></span>
+      <span aria-hidden="true">‹</span>
+    </button>
+
     <button class="btn ghost block" id="openMonthBtn" type="button" style="margin-bottom:14px;">📅 عرض مواقيت الشهر كاملًا</button>
 
-    <div class="note">🕌 <b>تنبيه:</b> الأذان الصوتي التلقائي والموبايل مقفول هيشتغل في <b>المرحلة الثانية</b> من التطبيق. مواقيت الصلاة هنا محسوبة على جهازك وتشتغل من غير إنترنت.</div>
+    <div class="note">🕌 <b>تنبيه:</b> الأذان الصوتي التلقائي والموبايل مقفول يعمل في <b>تطبيق الأندرويد</b> — لم يُختبَر بعد على جهاز حقيقي لمدة ٣ أيام متتالية. جرّبه من زر «جرّب الأذان» في الإعدادات. مواقيت الصلاة هنا محسوبة على جهازك وتشتغل من غير إنترنت.</div>
   </section>
 
   <!-- ============ PRAYER TIMES ============ -->
@@ -376,7 +401,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
 
     <div class="card">
       <h2><span class="dot"></span>تنبيهات الصلوات</h2>
-      <div class="hint">اختر الصلوات التي تريد التنبيه بها. تُحفظ اختياراتك الآن، وسيُفعَّل صوت الأذان في المرحلة الثانية.</div>
+      <div class="hint">اختر الصلوات التي تريد التنبيه بها. تُحفظ اختياراتك الآن، ويرفع الأذان صوتيًا في تطبيق الأندرويد عند وقت كل صلاة مفعّلة.</div>
       <div id="notifToggles"></div>
     </div>
   </section>
@@ -384,6 +409,11 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
   <!-- ============ QURAN ============ -->
   <section id="screen-quran" class="screen">
     <div id="quranIndex">
+      <button class="bookmark-card" id="quranBookmarkBtn" type="button" style="display:none;">
+        <span class="b-ico">📖</span>
+        <span class="b-txt"><span class="b-title">كمّل من حيث وقفت</span><span class="b-sub" id="quranBookmarkSub" style="display:block;"></span></span>
+        <span aria-hidden="true">‹</span>
+      </button>
       <div class="card" style="margin-bottom:12px;">
         <h2><span class="dot"></span>القرآن الكريم</h2>
         <div class="hint">النص بالرسم العثماني من AlQuran Cloud — يعمل من غير إنترنت. التلاوة الصوتية تحتاج إنترنت.</div>
@@ -412,6 +442,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
           <button class="chip-btn" id="repeatBtn" type="button">تكرار الآية: إيقاف</button>
         </div>
         <div class="audio-status" id="audioStatus">اختر قارئًا واضغط تشغيل — الصوت يحتاج إنترنت.</div>
+        <button class="audio-retry" id="audioRetryBtn" type="button">🔄 إعادة المحاولة</button>
         <audio id="ayahAudio" preload="none"></audio>
       </div>
     </div>
@@ -507,7 +538,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
           </select>
         </div>
       </div>
-      <div class="hint">التذكير قبل الصلاة سيُفعَّل مع الأذان في المرحلة الثانية.</div>
+      <div class="hint">التذكير قبل الصلاة يعمل مع الأذان في تطبيق الأندرويد — إشعار صامت قبل الصلاة بالمدة التي تختارها.</div>
     </div>
 
     <div class="card">
@@ -569,7 +600,33 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
         <button class="btn small" id="notifPermBtn" type="button">🔔 السماح بالإشعارات</button>
         <button class="btn small" id="batteryBtn" type="button">🔋 استثناء توفير البطارية</button>
       </div>
-      <div class="note">🔔 الأذان يشتغل بصوت كامل والموبايل مقفول عن طريق منبّهات دقيقة في تطبيق الأندرويد، وتُعاد جدولتها تلقائيًا كل يوم وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية. تنبيه صادق: بعض الشركات المصنّعة تقطع أصوات الإشعارات الطويلة بعد ثوانٍ؛ لذلك الأذان هنا يُشغَّل عبر خدمة أمامية بصوت منبّه كامل وليس صوت إشعار عادي.<br>🎙️ تسجيل الأذان: «Azan.ogg» للمستخدم Andrewler على ويكيميديا كومنز، برخصة CC BY-SA 4.0.</div>
+      <div class="note">🔔 الأذان يشتغل بصوت كامل والموبايل مقفول عن طريق منبّهات دقيقة في تطبيق الأندرويد، وتُعاد جدولتها تلقائيًا كل يوم (منبّه صيانة يومي) وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية أو تحديث التطبيق. تنبيه صادق: بعض الشركات المصنّعة تقطع أصوات الإشعارات الطويلة بعد ثوانٍ؛ لذلك الأذان هنا يُشغَّل عبر خدمة أمامية بصوت منبّه كامل وليس صوت إشعار عادي. <b>الأذان لم يُختبَر بعد على جهاز حقيقي لمدة ٣ أيام متتالية</b> — جرّبه من زر «جرّب الأذان» بالأسفل، وأخبرنا بالنتيجة.<br>🎙️ تسجيل الأذان: «Azan.ogg» للمستخدم Andrewler على ويكيميديا كومنز، برخصة CC BY-SA 4.0.</div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span>إعداد الأذان — خطوة بخطوة</h2>
+      <div class="hint">ثلاث خطوات حتى يرفع الأذان والموبايل مقفول. الحالة تُقرأ من نظام أندرويد نفسه حيث يسمح بذلك.</div>
+      <div id="walkSteps"></div>
+      <div class="row-btns" style="margin-top:10px;">
+        <button class="btn small" id="openWalkthroughBtn" type="button">🧭 فتح دليل الإعداد</button>
+        <button class="btn small ghost" id="refreshWalkBtn" type="button">🔄 تحديث الحالة</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="dot"></span>جرّب الأذان</h2>
+      <div class="hint">يشغّل الأذان من نفس مسار المنبّه الحقيقي بعد ١٠ ثوانٍ — اقفل الشاشة واسمع. التطبيق لا يستطيع أن يسمع بدالك، فسيُسأل بعدها إن كنت سمعته فعلًا.</div>
+      <div class="row-btns">
+        <button class="btn small" id="testAdhanBtn" type="button">🔔 جرّب الأذان بعد ١٠ ثوانٍ</button>
+      </div>
+      <div class="note" id="testAdhanStatus" style="margin-top:10px;">لم تُجرِّب الأذان بعد في هذه النسخة.</div>
+      <div id="testAdhanAsk" style="display:none; margin-top:10px;">
+        <div style="font-weight:800; font-size:14.5px; margin-bottom:8px;">سمعت الأذان؟</div>
+        <div class="row-btns">
+          <button class="btn small" id="testHeardYes" type="button">✅ نعم، سمعته</button>
+          <button class="btn small ghost" id="testHeardNo" type="button">❌ لا، ما سمعتوش</button>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -579,7 +636,7 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
         المواقيت محسوبة على جهازك بالكامل وتعمل من غير إنترنت.<br>
         طريقة الحساب الافتراضية: <b>الهيئة المصرية العامة للمساحة</b> (فجر ١٩.٥°، عشاء ١٧.٥°).<br>
         التاريخ الهجري: تقويم <b>أم القرى</b>.<br>
-        الإصدار: <b>١.٠</b> — كل المراحل: المواقيت والأذان والقرآن والأذكار والسبحة.
+        الإصدار: <b>١.١</b> — كل المراحل: المواقيت والأذان والقرآن والأذكار والسبحة.
       </p>
     </div>
   </section>
@@ -609,6 +666,19 @@ html[dir="ltr"] .switch input:checked + .slider::before{transform:translateX(22p
     </button>
   </div>
 </nav>
+
+<div class="overlay" id="walkOverlay" role="dialog" aria-label="دليل إعداد الأذان">
+  <div class="overlay-card">
+    <h2>🧭 إعداد الأذان — خطوة بخطوة</h2>
+    <div class="hint">حتى يرفع الأذان والموبايل مقفول، فعّل الخطوات دي مرة واحدة. لو حاجة مش مفعّلة، اضغط زرها وهيفتح شاشة الإعدادات المناسبة في نظام أندرويد.</div>
+    <div id="walkOverlaySteps"></div>
+    <div class="hint" style="margin-top:10px;">📵 <b>وضع عدم الإزعاج:</b> التطبيق لا يطلب تجاوزه ولا يحاول إلغاءه. الأذان يُشغَّل بصوت المنبّه، ومعظم الموبايلات بتسمح لصوت المنبّه يعدّي من عدم الإزعاج — لكن إعدادات موبايلك هي اللي بتقرر في النهاية. لو موبايلك مظبوط على كتم كل الأصوات، الأذان ممكن ما يتسمعش.</div>
+    <div class="row-btns" style="margin-top:12px;">
+      <button class="btn small" id="walkCloseBtn" type="button">تمام، فهمت</button>
+      <button class="btn small ghost" id="walkLaterBtn" type="button">إتمام لاحقًا من الإعدادات</button>
+    </div>
+  </div>
+</div>
 
 <script>
 "use strict";
@@ -912,6 +982,7 @@ function renderHome(){
   for(var i=1;i<PRAYERS.length;i++) html += prayerRowHtml(PRAYERS[i], t[PRAYERS[i].key], nxt);
   document.getElementById("todayPrayers").innerHTML = html;
   tickCountdown();
+  renderBookmark();
 }
 function prayerRowHtml(p, time, nxt){
   var isNext = (nxt.prayer.key===p.key && nxt.today);
@@ -1012,10 +1083,11 @@ function applySettingsAndRender(){
   refreshAlarmStatus();
 }
 
-/* ---------- الربط مع طبقة الأندرويد الأصلية (المرحلة الثانية: الأذان) ---------- */
-/* يبني جدول 7 أيام قادمة من الصلوات المفعّلة ويمرّره للتطبيق الأصلي،
-   الذي يخزّن الإعدادات ويُبقي المنبّهات متجددة (بما فيها بعد إعادة التشغيل)
-   عبر نسخة جافا من نفس خوارزمية حساب المواقيت. في نسخة الويب لا يوجد
+/* ---------- الربط مع طبقة الأندرويد الأصلية (الأذان) ---------- */
+/* يمرّر الإعدادات للتطبيق الأصلي، الذي يخزّنها ويحسب المواقيت بنسخة جافا
+   من نفس الخوارزمية ويُبقي المنبّهات متجددة: كل منبّه يُطلق يُعيد جدولة
+   3 أيام قادمة، إضافة إلى منبّه صيانة يومي، وإعادة جدولة بعد إعادة التشغيل
+   أو تغيير الوقت/المنطقة الزمنية أو تحديث التطبيق. في نسخة الويب لا يوجد
    جسر أصلي، فلا يحدث شيء — التنبيهات والأذان يعملان في تطبيق الأندرويد. */
 function pushAlarmSchedule(){
   try{
@@ -1039,11 +1111,14 @@ function pushAlarmSchedule(){
     }));
   }catch(e){}
 }
+function fmtTime(ts){ var d=new Date(ts); var m=d.getMinutes(); return arDigits(d.getHours())+":"+(m<10?"٠":"")+arDigits(m); }
 function refreshAlarmStatus(){
   var el=document.getElementById("alarmStatus");
   if(!el) return;
   if(!window.SalatiBridge || !window.SalatiBridge.getAlarmStatus){
     el.innerHTML="📱 نسخة الويب: التنبيهات والأذان الكامل يعملان في <b>تطبيق الأندرويد</b> فقط.";
+    renderWalkthrough(null);
+    renderTestAdhanStatus(null);
     return;
   }
   try{
@@ -1052,9 +1127,146 @@ function refreshAlarmStatus(){
     rows.push((st.exactAlarm?"✅":"⚠️")+" المنبّهات الدقيقة: "+(st.exactAlarm?"مسموحة":"غير مسموحة — فعّلها من الزر بالأسفل"));
     rows.push((st.notifications?"✅":"⚠️")+" إشعارات النظام: "+(st.notifications?"مسموحة":"غير مسموحة"));
     rows.push((st.batteryIgnored?"✅":"⚠️")+" استثناء توفير البطارية: "+(st.batteryIgnored?"مفعّل":"غير مفعّل — يُنصح بتفعيله حتى لا يوقف النظام الأذان"));
-    rows.push("🔁 تُعاد جدولة الأذان تلقائيًا كل يوم وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية.");
+    rows.push("🔁 تُعاد جدولة الأذان تلقائيًا كل يوم (منبّه صيانة يومي) وعند إعادة تشغيل الموبايل أو تغيير المنطقة الزمنية أو تحديث التطبيق.");
+    if(st.lastAlarmReceived) rows.push("📡 آخر منبّه وصل للتطبيق: "+fmtTime(st.lastAlarmReceived)+" — "+(new Date(st.lastAlarmReceived).toLocaleDateString("ar-EG")));
+    if(st.lastAdhanPlayed) rows.push("🔔 آخر أذان شغّله التطبيق: "+fmtTime(st.lastAdhanPlayed)+" ("+(st.lastAdhanPrayer||"")+")");
     el.innerHTML=rows.join("<br>");
+    renderWalkthrough(st);
+    renderTestAdhanStatus(st);
   }catch(e){ el.innerHTML="تعذّر قراءة حالة التنبيهات."; }
+}
+
+/* ---------- دليل إعداد الأذان (خطوة بخطوة) ---------- */
+function walkStepHtml(ico, title, sub, done, btnLabel, btnId){
+  var mark = done===true ? "✅" : (done===false ? "⚠️" : "❔");
+  var btn = btnLabel ? '<button class="btn small ghost w-btn" id="'+btnId+'" type="button">'+btnLabel+'</button>' : "";
+  return '<div class="walk-step"><span class="w-ico">'+mark+'</span><span class="w-txt"><span class="w-title">'+title+'</span><span class="w-sub" style="display:block;">'+sub+'</span></span>'+btn+'</div>';
+}
+function renderWalkthrough(st){
+  var html = "";
+  if(!st){
+    html += walkStepHtml("📱","الإشعارات","تعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.", null, "", "");
+    html += walkStepHtml("📱","المنبّهات الدقيقة","تعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.", null, "", "");
+    html += walkStepHtml("📱","استثناء توفير البطارية","يعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.", null, "", "");
+    html += walkStepHtml("📵","وضع عدم الإزعاج","التطبيق لا يطلب تجاوزه. صوت المنبّه غالبًا يعدّي منه، لكن إعدادات موبايلك هي اللي بتقرر.", null, "", "");
+  } else {
+    html += walkStepHtml("🔔","الإشعارات", st.notifications ? "مسموحة — سيظهر إشعار الأذان." : "غير مسموحة — الأذان قد يعمل بصوت لكن من غير إشعار.", st.notifications, "السماح", "wNotifBtn");
+    html += walkStepHtml("⏰","المنبّهات الدقيقة", st.exactAlarm ? "مسموحة — الأذان يشتغل في وقته بالضبط." : "غير مسموحة — بدونها الأذان قد يتأخر. افتح الإعدادات وفعّلها.", st.exactAlarm, "السماح", "wExactBtn");
+    html += walkStepHtml("🔋","استثناء توفير البطارية", st.batteryIgnored ? "مفعّل — النظام لن يوقف الأذان لتوفير البطارية." : "غير مفعّل — يُنصح بتفعيله حتى لا يوقف النظام الأذان أثناء النوم.", st.batteryIgnored, "التفعيل", "wBattBtn");
+    var dndTxt = "غير معروف على هذا الجهاز.";
+    var dndDone = null;
+    if(st.dnd==="all"){ dndTxt="مغلق — كل الأصوات مسموحة."; dndDone=true; }
+    else if(st.dnd==="alarms"){ dndTxt="مفعّل على «المنبّهات فقط» — صوت الأذان مسموح."; dndDone=true; }
+    else if(st.dnd==="priority"){ dndTxt="مفعّل على «الأولويات فقط» — الأذان قد لا يُسمع حسب إعداداتك."; dndDone=false; }
+    else if(st.dnd==="none"){ dndTxt="مفعّل على «صامت تمامًا» — الأذان غالبًا لن يُسمع. إعدادات موبايلك هي اللي بتقرر."; dndDone=false; }
+    html += walkStepHtml("📵","وضع عدم الإزعاج", dndTxt+" التطبيق لا يطلب تجاوز عدم الإزعاج ولا يحاول إلغاءه.", dndDone, "إعدادات الصوت", "wDndBtn");
+  }
+  var a=document.getElementById("walkSteps"); if(a) a.innerHTML=html;
+  var b=document.getElementById("walkOverlaySteps"); if(b) b.innerHTML=html;
+  wireWalkButtons();
+}
+function wireWalkButtons(){
+  var wn=document.getElementById("wNotifBtn");
+  if(wn) wn.onclick=function(){ if(window.SalatiBridge && window.SalatiBridge.requestNotificationPermission) window.SalatiBridge.requestNotificationPermission(); setTimeout(refreshAlarmStatus, 1500); };
+  var we=document.getElementById("wExactBtn");
+  if(we) we.onclick=function(){ if(window.SalatiBridge && window.SalatiBridge.requestExactAlarmPermission) window.SalatiBridge.requestExactAlarmPermission(); setTimeout(refreshAlarmStatus, 1500); };
+  var wb=document.getElementById("wBattBtn");
+  if(wb) wb.onclick=function(){ if(window.SalatiBridge && window.SalatiBridge.openBatterySettings) window.SalatiBridge.openBatterySettings(); setTimeout(refreshAlarmStatus, 1500); };
+  var wd=document.getElementById("wDndBtn");
+  if(wd) wd.onclick=function(){ if(window.SalatiBridge && window.SalatiBridge.openSoundSettings) window.SalatiBridge.openSoundSettings(); };
+}
+function openWalkthrough(){
+  renderWalkthrough(window.SalatiBridge && window.SalatiBridge.getAlarmStatus ? JSON.parse(window.SalatiBridge.getAlarmStatus()||"{}") : null);
+  var ov=document.getElementById("walkOverlay"); if(ov) ov.classList.add("open");
+}
+function closeWalkthrough(markSeen){
+  var ov=document.getElementById("walkOverlay"); if(ov) ov.classList.remove("open");
+  if(markSeen){ try{ localStorage.setItem("salati_walk_seen","1"); }catch(e){} }
+}
+
+/* ---------- جرّب الأذان ---------- */
+function loadTestAdhanRecord(){ try{ var r=JSON.parse(localStorage.getItem("salati_test_adhan")||"null"); return r||null; }catch(e){ return null; } }
+function renderTestAdhanStatus(st){
+  var el=document.getElementById("testAdhanStatus");
+  var ask=document.getElementById("testAdhanAsk");
+  if(!el) return;
+  if(!st){
+    el.textContent="«جرّب الأذان» يعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.";
+    if(ask) ask.style.display="none";
+    return;
+  }
+  var rec=loadTestAdhanRecord();
+  if(st.testScheduledAt){
+    var fired = st.lastAdhanPlayed && st.lastAdhanPlayed >= st.testScheduledAt - 5000 && st.lastAdhanPrayer==="تجربة الأذان";
+    if(fired){
+      el.textContent="✅ رصد النظام تشغيل الأذان التجريبي الساعة "+fmtTime(st.lastAdhanPlayed)+" — لو سمعته فعلًا، أكّد بالأسفل.";
+      if(ask) ask.style.display="block";
+      return;
+    }
+    if(Date.now() > st.testScheduledAt + 60000){
+      el.textContent="⚠️ مرّ موعد التجربة ولم يرصد النظام تشغيل الأذان. تأكد من الأذونات (المنبّهات الدقيقة والإشعارات) وجرّب مرة أخرى.";
+      if(ask) ask.style.display="block";
+      return;
+    }
+    el.textContent="⏳ تمت الجدولة — سيعمل الأذان بعد ١٠ ثوانٍ. اقفل الشاشة دلوقتي واسمع.";
+    if(ask) ask.style.display="none";
+    return;
+  }
+  if(rec){
+    el.textContent="آخر نتيجة مسجلة: "+(rec.heard?"✅ سمعت الأذان":"❌ لم أسمع الأذان")+" — "+new Date(rec.at).toLocaleDateString("ar-EG");
+  } else {
+    el.textContent="لم تُجرِّب الأذان بعد في هذه النسخة.";
+  }
+  if(ask) ask.style.display="none";
+}
+function recordTestHeard(heard){
+  try{ localStorage.setItem("salati_test_adhan", JSON.stringify({heard:heard, at:Date.now()})); }catch(e){}
+  var ask=document.getElementById("testAdhanAsk"); if(ask) ask.style.display="none";
+  refreshAlarmStatus();
+}
+
+/* ---------- آخر آية (علامة «كمّل من حيث وقفت») ---------- */
+var BOOKMARK_KEY="salati_last_ayah";
+function loadBookmark(){ try{ var b=JSON.parse(localStorage.getItem(BOOKMARK_KEY)||"null"); return (b && b.surah && b.ayah)?b:null; }catch(e){ return null; } }
+function saveBookmark(surah, ayah){
+  try{ localStorage.setItem(BOOKMARK_KEY, JSON.stringify({surah:surah, ayah:ayah, at:Date.now()})); }catch(e){}
+  renderBookmark();
+}
+function renderBookmark(){
+  var b=loadBookmark();
+  var card=document.getElementById("bookmarkCard"), sub=document.getElementById("bookmarkCardSub");
+  var qb=document.getElementById("quranBookmarkBtn"), qsub=document.getElementById("quranBookmarkSub");
+  if(!b){ if(card) card.style.display="none"; if(qb) qb.style.display="none"; return; }
+  var s=(typeof QURAN_DATA!=="undefined") ? QURAN_DATA.surahs[b.surah-1] : null;
+  var label = s ? (s.name+" — الآية "+arDigits(b.ayah)) : ("سورة "+arDigits(b.surah)+" — الآية "+arDigits(b.ayah));
+  if(card){ card.style.display="flex"; if(sub) sub.textContent=label; }
+  if(qb){ qb.style.display="flex"; if(qsub) qsub.textContent=label; }
+}
+function resumeBookmark(){
+  var b=loadBookmark(); if(!b) return;
+  openSurah(b.surah);
+  setTimeout(function(){
+    var el=document.querySelector('#readerText .ayah[data-i="'+b.ayah+'"]');
+    if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
+    saveBookmark(b.surah, b.ayah);
+  }, 80);
+}
+var bookmarkScrollTimer=null;
+function trackBookmarkOnScroll(){
+  if(bookmarkScrollTimer) return;
+  bookmarkScrollTimer=setTimeout(function(){
+    bookmarkScrollTimer=null;
+    var qr=document.getElementById("quranReader");
+    if(!qr || qr.style.display==="none" || !audioState.surah) return;
+    var els=document.querySelectorAll("#readerText .ayah");
+    var best=null, bestTop=-1e9;
+    var mid=window.innerHeight*0.4;
+    for(var i=0;i<els.length;i++){
+      var top=els[i].getBoundingClientRect().top;
+      if(top<=mid && top>bestTop){ bestTop=top; best=els[i]; }
+    }
+    if(best) saveBookmark(audioState.surah.n, +best.getAttribute("data-i"));
+  }, 500);
 }
 
 /* ---------- التنقل ---------- */
@@ -1065,7 +1277,7 @@ function showScreen(name){
   if(el) el.classList.add("active");
   var btns = document.querySelectorAll(".nav-btn");
   for(var j=0;j<btns.length;j++) btns[j].classList.toggle("active", btns[j].getAttribute("data-screen")===name);
-  if(name==="quran") loadReciters();
+  if(name==="quran"){ loadReciters(); renderBookmark(); }
   if(name==="adhkar"){ renderMainCats(); }
   if(name==="tasbih"){ renderTasbih(); }
   if(name==="settings"){ refreshAlarmStatus(); }
@@ -1178,8 +1390,9 @@ function init(){
   /* ---------- Phase 3: Quran ---------- */
   audioEl = document.getElementById("ayahAudio");
   audioEl.addEventListener("ended", onAyahEnded);
-  audioEl.addEventListener("error", function(){
-    if(audioState.playing){ setAudioStatus("تعذّر تشغيل الصوت — تحقق من الإنترنت.", true); audioState.playing=false; syncPlayBtn(); }
+  audioEl.addEventListener("error", function(){ handleAudioError(); });
+  document.getElementById("audioRetryBtn").addEventListener("click", function(){
+    showAudioRetry(false); audioState.triedFallback = false; playCurrentAyah();
   });
   renderSurahList("");
   document.getElementById("surahSearch").addEventListener("input", function(){ renderSurahList(this.value); });
@@ -1259,6 +1472,55 @@ function init(){
   /* ---------- Home: open month view ---------- */
   document.getElementById("openMonthBtn").addEventListener("click", function(){ showScreen("times"); renderMonth(); });
 
+  /* ---------- Last ayah bookmark ---------- */
+  var bc=document.getElementById("bookmarkCard");
+  if(bc) bc.addEventListener("click", function(){ showScreen("quran"); resumeBookmark(); });
+  var qb=document.getElementById("quranBookmarkBtn");
+  if(qb) qb.addEventListener("click", resumeBookmark);
+  window.addEventListener("scroll", trackBookmarkOnScroll, {passive:true});
+  renderBookmark();
+
+  /* ---------- Test adhan ---------- */
+  var tb=document.getElementById("testAdhanBtn");
+  if(tb) tb.addEventListener("click", function(){
+    var stEl=document.getElementById("testAdhanStatus");
+    if(!window.SalatiBridge || !window.SalatiBridge.scheduleTestAdhan){
+      if(stEl) stEl.textContent="«جرّب الأذان» يعمل في تطبيق الأندرويد فقط — هذه نسخة الويب.";
+      return;
+    }
+    window.SalatiBridge.scheduleTestAdhan();
+    if(stEl) stEl.textContent="⏳ تمت الجدولة — سيعمل الأذان بعد ١٠ ثوانٍ. اقفل الشاشة دلوقتي واسمع.";
+    document.getElementById("testAdhanAsk").style.display="none";
+    setTimeout(refreshAlarmStatus, 12000);
+    setTimeout(refreshAlarmStatus, 25000);
+  });
+  var hy=document.getElementById("testHeardYes");
+  if(hy) hy.addEventListener("click", function(){ recordTestHeard(true); });
+  var hn=document.getElementById("testHeardNo");
+  if(hn) hn.addEventListener("click", function(){ recordTestHeard(false); });
+
+  /* ---------- Permission walkthrough ---------- */
+  var ow=document.getElementById("openWalkthroughBtn");
+  if(ow) ow.addEventListener("click", openWalkthrough);
+  var rw=document.getElementById("refreshWalkBtn");
+  if(rw) rw.addEventListener("click", refreshAlarmStatus);
+  var wc=document.getElementById("walkCloseBtn");
+  if(wc) wc.addEventListener("click", function(){ closeWalkthrough(true); });
+  var wl=document.getElementById("walkLaterBtn");
+  if(wl) wl.addEventListener("click", function(){ closeWalkthrough(true); });
+  var wo=document.getElementById("walkOverlay");
+  if(wo) wo.addEventListener("click", function(e){ if(e.target===wo) closeWalkthrough(true); });
+  /* first launch: show the walkthrough once (Android app only) */
+  try{
+    if(window.SalatiBridge && !localStorage.getItem("salati_walk_seen")){
+      setTimeout(openWalkthrough, 900);
+    }
+  }catch(e){}
+  /* refresh alarm status when the app comes back to the foreground */
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden) refreshAlarmStatus();
+  });
+
   setInterval(tickCountdown, 1000);
   /* refresh home at midnight boundary / every minute for prayer rollover */
   setInterval(function(){ renderHome(); }, 60000);
@@ -1316,7 +1578,7 @@ function openSurah(n){
   audioState.surah = s; audioState.idx = 0; stopAudio();
   document.getElementById("quranIndex").style.display = "none";
   document.getElementById("quranReader").style.display = "block";
-  document.getElementById("readerSurahName").textContent = "سورة "+s.name;
+  document.getElementById("readerSurahName").textContent = s.name; /* الاسم من البيانات يشمل كلمة «سُورَةُ» أصلًا — لا تُضاف «سورة» مرة أخرى */
   document.getElementById("readerBasmala").textContent = (s.n!==1 && s.n!==9) ? BASMALA : "";
   document.getElementById("readerMeta").textContent = (s.rev==="Meccan"?"مكية":"مدنية")+" • "+arDigits(s.count)+" آيات • الجزء "+arDigits(s.ayahs[0].j)+" • صفحة "+arDigits(s.ayahs[0].p);
   var ayahs = surahDisplayAyahs(s);
@@ -1334,6 +1596,7 @@ function openSurah(n){
     });
   }
   updateAudioStatus();
+  saveBookmark(n, 1);
   var qr = document.getElementById("quranReader");
   if(qr && qr.scrollIntoView) qr.scrollIntoView({block:"start"});
 }
@@ -1342,8 +1605,30 @@ function backToQuranIndex(){
   document.getElementById("quranReader").style.display = "none";
   document.getElementById("quranIndex").style.display = "block";
 }
-function audioUrlFor(edition, globalNum){
-  return "https://cdn.islamic.network/quran/audio/128/"+edition+"/"+globalNum+".mp3";
+function audioUrlFor(edition, globalNum, bitrate){
+  return "https://cdn.islamic.network/quran/audio/"+(bitrate||"128")+"/"+edition+"/"+globalNum+".mp3";
+}
+/* رسالة عربية محددة حسب سبب فشل الصوت، مع زر إعادة محاولة ظاهر. */
+function audioErrorMessage(){
+  var e = audioEl && audioEl.error;
+  if(e && e.code===2) return "تعذّر تحميل الصوت — الشبكة بطيئة أو مقطوعة. جرّب مرة أخرى.";
+  if(e && e.code===3) return "تعذّر فك تشفير ملف الصوت. جرّب مرة أخرى.";
+  if(e && e.code===4) return "ملف الصوت غير مدعوم على هذا المتصفح.";
+  if(e && e.code===1) return "توقف تحميل الصوت. جرّب مرة أخرى.";
+  return "تعذّر تشغيل الصوت — تحقق من الإنترنت.";
+}
+function showAudioRetry(show){ var b=document.getElementById("audioRetryBtn"); if(b) b.style.display = show ? "block" : "none"; }
+function handleAudioError(){
+  if(!audioState.playing) return;
+  /* محاولة احتياطية مرة واحدة بجودة أقل (64kbps) قبل إظهار الخطأ. */
+  if(!audioState.triedFallback){
+    audioState.triedFallback = true;
+    var a = audioState.surah.ayahs[audioState.idx];
+    try{ audioEl.src = audioUrlFor(audioState.reciter, a.g, "64"); audioEl.load(); var pr = audioEl.play(); if(pr && pr.catch) pr.catch(function(){ handleAudioError(); }); }catch(e){ handleAudioError(); }
+    return;
+  }
+  setAudioStatus(audioErrorMessage(), true);
+  audioState.playing=false; syncPlayBtn(); showAudioRetry(true);
 }
 function loadReciters(){
   if(recitersLoaded) return;
@@ -1385,9 +1670,9 @@ function updateAudioStatus(){
   var cur = s.ayahs[audioState.idx];
   var rec = audioState.reciter ? (document.getElementById("reciterSelect").selectedOptions[0]||{}).textContent : "—";
   if(audioState.playing){
-    setAudioStatus("يُشغَّل الآن: سورة "+s.name+" — الآية "+arDigits(cur.i)+" • "+rec);
+    setAudioStatus("يُشغَّل الآن: "+s.name+" — الآية "+arDigits(cur.i)+" • "+rec);
   } else {
-    setAudioStatus("سورة "+s.name+" • "+arDigits(s.count)+" آيات • القارئ: "+rec+" • الصوت يحتاج إنترنت.");
+    setAudioStatus(s.name+" • "+arDigits(s.count)+" آيات • القارئ: "+rec+" • الصوت يحتاج إنترنت.");
   }
 }
 function highlightAyah(globalNum){
@@ -1400,15 +1685,26 @@ function playAyahByGlobal(globalNum){
   for(var i=0;i<audioState.surah.ayahs.length;i++) if(audioState.surah.ayahs[i].g===globalNum){ idx=i; break; }
   if(idx<0) return;
   audioState.idx = idx;
+  saveBookmark(audioState.surah.n, audioState.surah.ayahs[idx].i);
   playCurrentAyah();
 }
 function playCurrentAyah(){
   if(!audioState.surah) return;
   if(!audioState.reciter){ setAudioStatus("اختر قارئًا أولًا (القائمة تحتاج إنترنت).", true); return; }
   var a = audioState.surah.ayahs[audioState.idx];
-  audioEl.src = audioUrlFor(audioState.reciter, a.g);
-  var pr = audioEl.play();
-  if(pr && pr.catch) pr.catch(function(){ setAudioStatus("تعذّر تشغيل الصوت — تحقق من الإنترنت.", true); audioState.playing=false; syncPlayBtn(); });
+  audioState.triedFallback = false;
+  showAudioRetry(false);
+  try{ audioEl.src = audioUrlFor(audioState.reciter, a.g); audioEl.load(); }catch(e){}
+  var pr = null;
+  try{ pr = audioEl.play(); }catch(e){ pr = null; }
+  if(pr && pr.catch) pr.catch(function(err){
+    if(err && err.name==="NotAllowedError"){
+      setAudioStatus("المتصفح منع التشغيل — اضغط زر التشغيل مرة أخرى.", true);
+    } else {
+      setAudioStatus(audioErrorMessage(), true);
+    }
+    audioState.playing=false; syncPlayBtn(); showAudioRetry(true);
+  });
   audioState.playing = true;
   highlightAyah(a.g);
   syncPlayBtn();
